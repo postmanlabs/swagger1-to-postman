@@ -103,7 +103,12 @@ var converter = {
             }, this);
         }, this);
 
-        this.sampleFile.folders.push(folderItem);
+    
+        if(folderItem.order.length > 1){
+            this.sampleFile.folders.push(folderItem);   
+        }else{
+            this.sampleFile.order.push(folderItem.order[0]);
+        }
     },
 
     read: function(location) {
@@ -149,6 +154,8 @@ var converter = {
     convert: function(inputFile, options, cb) {
 
         this.group = options.group;
+        
+        // set this to true to generate the test file
         this.test = options.test;
 
         var resourceList;
