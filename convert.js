@@ -9,12 +9,19 @@ var converter = {
     sampleFile: {},
     env: {},
 
-    convertAPI: function(res, dir, description) {
+    convertAPI: function(res, dir, description, apiDeclaration) {
 
         // Resolve the apiFile location.
         // res.path has a leading /
-        var apiFile = this.read(path.join(dir, "." + res.path));
 
+        var apiFile;
+
+        if(!apiDeclaration){
+            apiFile = this.read(path.join(dir, "." + res.path));    
+        }else{
+            apiFile = res;
+        }
+        
         var folderItem = {};
 
         folderItem.name = apiFile.resourcePath;
@@ -103,11 +110,18 @@ var converter = {
             }, this);
         }, this);
 
-    
         if(folderItem.order.length > 1){
             this.sampleFile.folders.push(folderItem);   
         }else{
             this.sampleFile.order.push(folderItem.order[0]);
+        }
+
+        if(apiDeclaration){
+            // In case it is an apiDeclaration, do not create folders.
+            // Just add the requests to the collection and populate the root
+            // order property.
+            this.sampleFile.order = folderItem.order;
+            this.sampleFile.folders = [];
         }
     },
 
@@ -154,7 +168,7 @@ var converter = {
     convert: function(inputFile, options, cb) {
 
         this.group = options.group;
-        
+
         // set this to true to generate the test file
         this.test = options.test;
 
@@ -176,7 +190,7 @@ var converter = {
         if (_.has(resourceList, 'info') && _.has(resourceList.info, 'title')) {
             sf.name = resourceList.info.title;
         }
-
+        
         var len = resourceList.apis.length;
         var apis = resourceList.apis;
 
@@ -194,9 +208,16 @@ var converter = {
         sf.environment.timestamp = this.generateTimestamp();
         sf.environment.id = this.generateId();
 
-        _.forEach(apis, function(api) {
-            this.convertAPI(api, dir, api.description);
-        }, this);
+        // Check if read file is an API declaration or a Resource Listing
+        // API Declaration's apis property elements have operations as a required field.
+
+        if(_.has(apis[0], 'operations')){
+            this.convertAPI(resourceList, '', '', true)
+        }else{
+            _.forEach(apis, function(api) {
+                this.convertAPI(api, dir, api.description, false);
+            }, this);
+        }
 
         // Add the environment variables.
         _.forOwn(this.env, function(val) {
