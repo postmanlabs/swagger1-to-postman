@@ -165,7 +165,7 @@ var converter = {
         }
     },
 
-    convert: function(inputFile, options, cb) {
+    convert: function(inputFile, options, cb, cbError) {
 
         this.group = options.group;
 
@@ -177,65 +177,79 @@ var converter = {
         var dir = path.dirname(inputFile);
 
         resourceList = this.read(file);
-
-        file = './postman-boilerplate.json';
-        this.sampleFile = this.read(file);
-
-        var sf = this.sampleFile;
-
-        // Collection trivia
-        sf.id = this.generateId();
-        sf.timestamp = this.generateTimestamp();
-
-        if (_.has(resourceList, 'info') && _.has(resourceList.info, 'title')) {
-            sf.name = resourceList.info.title;
-        }
+        var inputJson = resourceList;
+        //file = './postman-boilerplate.json';
         
-        var len = resourceList.apis.length;
-        var apis = resourceList.apis;
+        this.convertJson(inputJson, options, cb, cbError);
+        
+    },
 
-        this.sampleRequest = sf.requests[0];
+    convertJSON: function(inputFile, options, cb, cbError) {
+        try {
+            this.sampleFile = JSON.parse('{"environment":{"values": [],"name": "","id": "","timestamp": 0},"folders": [{"id": "","name": "","description": "","order": [],"collection_name": "","collection_id": ""}],"id": "","name": "Postman Barebones","order": [],"requests": [{"collectionId": "","dataMode": "params","descriptionFormat": "html","description": "","data": [],"headers": "","id": "","method": "","name": "","preRequestScript": "","pathVariables": {},"responses": [],"synced": false,"tests": "","time": 0,"url": ""}],"synced": false,"timestamp": 0}');
 
-        if (len < 1) {
-            console.error("No requests are specificed in the spec.");
-            process.exit(1);
-        }
+            file = './postman-boilerplate.json';
+            this.sampleFile = this.read(file);
 
-        sf.requests = [];
-        sf.folders = [];
+            var sf = this.sampleFile;
 
-        sf.environment.name = ( sf.name || "Default" ) + "'s Environment";
-        sf.environment.timestamp = this.generateTimestamp();
-        sf.environment.id = this.generateId();
+            // Collection trivia
+            sf.id = this.generateId();
+            sf.timestamp = this.generateTimestamp();
 
-        // Check if read file is an API declaration or a Resource Listing
-        // API Declaration's apis property elements have operations as a required field.
+            if (_.has(resourceList, 'info') && _.has(resourceList.info, 'title')) {
+                sf.name = resourceList.info.title;
+            }
+            
+            var len = resourceList.apis.length;
+            var apis = resourceList.apis;
 
-        if(_.has(apis[0], 'operations')){
-            this.convertAPI(resourceList, '', '', true)
-        }else{
-            _.forEach(apis, function(api) {
-                this.convertAPI(api, dir, api.description, false);
-            }, this);
-        }
+            this.sampleRequest = sf.requests[0];
 
-        // Add the environment variables.
-        _.forOwn(this.env, function(val) {
-            sf.environment.values.push(val);
-        }, this);
+            if (len < 1) {
+                console.error("No requests are specificed in the spec.");
+                process.exit(1);
+            }
 
-        if (!this.group) {
-            // If grouping is disabled, reset the folders.
+            sf.requests = [];
             sf.folders = [];
+
+            sf.environment.name = ( sf.name || "Default" ) + "'s Environment";
+            sf.environment.timestamp = this.generateTimestamp();
+            sf.environment.id = this.generateId();
+
+            // Check if read file is an API declaration or a Resource Listing
+            // API Declaration's apis property elements have operations as a required field.
+
+            if(_.has(apis[0], 'operations')){
+                this.convertAPI(resourceList, '', '', true)
+            }else{
+                _.forEach(apis, function(api) {
+                    this.convertAPI(api, dir, api.description, false);
+                }, this);
+            }
+
+            // Add the environment variables.
+            _.forOwn(this.env, function(val) {
+                sf.environment.values.push(val);
+            }, this);
+
+            if (!this.group) {
+                // If grouping is disabled, reset the folders.
+                sf.folders = [];
+            }
+
+            this.validate();
+
+            var env = _.clone(this.sampleFile.environment, true);
+            
+            delete sf.environment;
+
+            cb(sf, env);
         }
-
-        this.validate();
-
-        var env = _.clone(this.sampleFile.environment, true);
-        
-        delete sf.environment;
-
-        cb(sf, env);
+        catch(e) {
+            cbError("Swagger",e);
+        }
     },
 
     validate: function() {
