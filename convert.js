@@ -184,12 +184,9 @@ var converter = {
         
     },
 
-    convertJSON: function(inputFile, options, cb, cbError) {
+    convertJSON: function(inputJson, options, cb, cbError) {
         try {
             this.sampleFile = JSON.parse('{"environment":{"values": [],"name": "","id": "","timestamp": 0},"folders": [{"id": "","name": "","description": "","order": [],"collection_name": "","collection_id": ""}],"id": "","name": "Postman Barebones","order": [],"requests": [{"collectionId": "","dataMode": "params","descriptionFormat": "html","description": "","data": [],"headers": "","id": "","method": "","name": "","preRequestScript": "","pathVariables": {},"responses": [],"synced": false,"tests": "","time": 0,"url": ""}],"synced": false,"timestamp": 0}');
-
-            file = './postman-boilerplate.json';
-            this.sampleFile = this.read(file);
 
             var sf = this.sampleFile;
 
@@ -197,12 +194,12 @@ var converter = {
             sf.id = this.generateId();
             sf.timestamp = this.generateTimestamp();
 
-            if (_.has(resourceList, 'info') && _.has(resourceList.info, 'title')) {
-                sf.name = resourceList.info.title;
+            if (_.has(inputJson, 'info') && _.has(inputJson.info, 'title')) {
+                sf.name = inputJson.info.title;
             }
             
-            var len = resourceList.apis.length;
-            var apis = resourceList.apis;
+            var len = inputJson.apis.length;
+            var apis = inputJson.apis;
 
             this.sampleRequest = sf.requests[0];
 
@@ -222,7 +219,7 @@ var converter = {
             // API Declaration's apis property elements have operations as a required field.
 
             if(_.has(apis[0], 'operations')){
-                this.convertAPI(resourceList, '', '', true)
+                this.convertAPI(inputJson, '', '', true)
             }else{
                 _.forEach(apis, function(api) {
                     this.convertAPI(api, dir, api.description, false);
