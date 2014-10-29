@@ -248,7 +248,7 @@ var converter = {
             cb(sf, env);
         }
         catch(e) {
-            cbError("Swagger",e);
+            cbError(e);
         }
     },
 
