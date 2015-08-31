@@ -1,5 +1,5 @@
 {
-    "name": "Swagger2Postman",
+    "name": "swagger2-to-postman",
     "version": "0.0.1",
     "private": true,
     "description": "Convert a given Swagger spec to POSTMan spec",
