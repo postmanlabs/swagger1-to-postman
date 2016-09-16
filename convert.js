@@ -245,8 +245,10 @@ var converter = {
             cb(sf, env);
         }
         catch(e) {
-            console.trace(e);
-            cbError && cbError(e);
+            console.error(e);
+            if(typeof cbError === "function") {
+                cbError(e);
+            }
         }
     },
 
