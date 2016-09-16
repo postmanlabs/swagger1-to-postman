@@ -2,7 +2,7 @@ var fs = require('fs');
 var uuid = require('node-uuid');
 var path = require('path');
 var validator = require('postman_validator');
-var _ = require('lodash');
+var _ = require('lodash').noConflict();
 
 var converter = {
 
@@ -180,7 +180,7 @@ var converter = {
         var inputJson = resourceList;
         //file = './postman-boilerplate.json';
         
-        this.convertJson(inputJson, options, cb, cbError);
+        this.convertJSON(inputJson, options, cb, cbError);
         
     },
 
@@ -222,7 +222,7 @@ var converter = {
                 this.convertAPI(inputJson, '', '', true)
             }else{
                 _.forEach(apis, function(api) {
-                    this.convertAPI(api, dir, api.description, false);
+                    this.convertAPI(api, '', api.description, false);
                 }, this);
             }
 
@@ -245,7 +245,8 @@ var converter = {
             cb(sf, env);
         }
         catch(e) {
-            cbError(e);
+            console.trace(e);
+            cbError && cbError(e);
         }
     },
 

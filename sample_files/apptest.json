@@ -1,0 +1,54 @@
+{
+    "resourcePath":  "/account",
+    "apis":  [{
+      "path":  "/account/authenticate/{username}",
+      "description": "",
+      "operations":  [{
+        "parameters":  [{
+          "name":  "username",
+          "description":  "A confirmed Wordnik username",
+          "required":  true,
+          "dataType":  "string",
+          "allowMultiple":  false,
+          "paramType":  "path"
+        }],
+        "summary":  "Authenticates a User",
+        "method":  "GET",
+        "nickname":  "authenticate",
+        "responseClass":  "AuthenticationToken",
+        "errorResponses":  [{
+          "reason":  "Account not available.",
+          "code":  403
+        },
+        {
+          "reason":  "User not found.",
+          "code":  404
+        }]
+      }]
+    }],
+    "models":  {
+      "User":  {
+        "uniqueItems":  false,
+        "properties":  {
+          "id":  {
+            "uniqueItems":  false,
+            "type":  "long",
+            "required":  false
+          }
+        },
+        "id":  "user",
+        "type":  "any",
+        "required":  false
+      },
+      "ApiTokenStatus":  {
+        "uniqueItems":  false,
+        "properties":  {},
+        "id":  "ApiTokenStatus",
+        "type":  "any",
+        "required":  false
+      }
+    },
+    "apiVersion":  "4.0",
+    "swaggerVersion":  "1.0",
+    "basePath":  "http: //api.wordnik.com/v4"
+  }

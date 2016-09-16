@@ -4,7 +4,7 @@ var program = require('commander');
 var Converter = require('../convert.js');
 var fs = require('fs');
 var path = require('path');
-var _ = require('lodash');
+var _ = require('lodash').noConflict();
 
 function parseArguments() {
     program
@@ -41,13 +41,12 @@ function parseArguments() {
 
     if (test) {
         // file, options, callback
-        Converter.convert('sample_files/petstore/resources.json', {
+        Converter.convert('sample_files/apptest.json', {
             group: true,
             test: true,
         }, function(output, environment) {
             var data;
             var env;
-            
             try {
                 data = JSON.parse(fs.readFileSync('sample_files/petstore/out.json', 'utf-8'));
                 env = JSON.parse(fs.readFileSync('sample_files/petstore/out-environment.json'), 'utf-8');
