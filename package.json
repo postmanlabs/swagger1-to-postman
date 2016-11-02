@@ -1,5 +1,5 @@
 {
-    "name": "@postmanlabs/swagger1-to-postman",
+    "name": "@postman/swagger1-to-postman",
     "version": "0.0.3",
     "description": "Convert a given Swagger spec to POSTMan spec",
     "main": "convert.js",
