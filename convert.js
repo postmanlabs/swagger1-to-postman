@@ -31,8 +31,8 @@ var converter = {
         folderItem.order = [];
         folderItem.id = this.generateId();
 
-        _.forEach(apiFile.apis, function(api) {
-            _.forEach(api.operations, function(operation) {
+        _.forEach(apiFile.apis, (api) => {
+            _.forEach(api.operations, (operation) => {
 
                 // Operation variables.
                 var header = '';
@@ -40,7 +40,7 @@ var converter = {
                 var queryFlag = false;
 
                 // Make a deep copy of the the sampleRequest.
-                var request = _.clone(this.sampleRequest, true);
+                var request = _.cloneDeep(this.sampleRequest);
                 var params = false;
                 request.collectionId = this.sampleFile.id;
 
@@ -52,7 +52,7 @@ var converter = {
                 request.name = operation.nickname;
                 request.time = this.generateTimestamp();
 
-                _.forEach(operation.parameters, function(param) {
+                _.forEach(operation.parameters, (param) => {
                     switch (param.paramType) {
                         case 'header':
                             header += param.name + ": \n";
@@ -96,7 +96,7 @@ var converter = {
                         default:
                             break;
                     }
-                }, this);
+                });
 
                 folderItem.order.push(request.id);
 
@@ -107,8 +107,8 @@ var converter = {
                 request.url += query;
 
                 this.sampleFile.requests.push(request);
-            }, this);
-        }, this);
+            });
+        });
 
         if(folderItem.order.length > 1){
             this.sampleFile.folders.push(folderItem);   
@@ -221,15 +221,15 @@ var converter = {
             if(_.has(apis[0], 'operations')){
                 this.convertAPI(inputJson, '', '', true)
             }else{
-                _.forEach(apis, function(api) {
+                _.forEach(apis, (api) => {
                     this.convertAPI(api, '', api.description, false);
-                }, this);
+                });
             }
 
             // Add the environment variables.
-            _.forOwn(this.env, function(val) {
+            _.forOwn(this.env, (val) => {
                 sf.environment.values.push(val);
-            }, this);
+            });
 
             if (!this.group) {
                 // If grouping is disabled, reset the folders.
@@ -238,7 +238,7 @@ var converter = {
 
             this.validate();
 
-            var env = _.clone(this.sampleFile.environment, true);
+            var env = _.cloneDeep(this.sampleFile.environment);
             
             delete sf.environment;
 
