@@ -17,8 +17,11 @@ var converter = {
         var apiFile;
 
         if(!apiDeclaration){
-            apiFile = this.read(path.join(dir, "." + res.path));    
-        }else{
+            // this might throw an exception,
+            // which will be caught in convertJSON's main try..catch
+            apiFile = this.read(path.join(dir, "." + res.path));
+        }
+        else{
             apiFile = res;
         }
         
@@ -126,14 +129,8 @@ var converter = {
     },
 
     read: function(location) {
-        var data;
-        try {
-            data = fs.readFileSync(location, 'utf-8');
-            return JSON.parse(data);
-        } catch (err) {
-            console.log(err);
-            process.exit(1);
-        }
+        var data = fs.readFileSync(location, 'utf-8');
+        return JSON.parse(data);
     },
 
     addEnvKey: function(key, type, displayName) {
@@ -176,10 +173,14 @@ var converter = {
         var file = path.resolve(__dirname, inputFile);
         var dir = path.dirname(inputFile);
 
-        resourceList = this.read(file);
+        try {
+            resourceList = this.read(file);
+        }
+        catch (e) {
+            return cbError(e);
+        }
+
         var inputJson = resourceList;
-        //file = './postman-boilerplate.json';
-        
         this.convertJSON(inputJson, options, cb, cbError);
         
     },
@@ -204,8 +205,7 @@ var converter = {
             this.sampleRequest = sf.requests[0];
 
             if (len < 1) {
-                console.error("No requests are specificed in the spec.");
-                process.exit(1);
+                cbError({ message: "No requests are specified in the Swagger 1.2 spec."});
             }
 
             sf.requests = [];
