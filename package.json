@@ -1,8 +1,14 @@
 {
   "name": "@postman/swagger1-to-postman",
-  "version": "0.0.5",
-  "description": "Convert a given Swagger spec to POSTMan spec",
-  "main": "convert.js",
+  "version": "0.0.6",
+  "description": "Convert a given Swagger spec to Postman spec",
+  "main": "index.js",
+  "com_postman_plugin": {
+    "plugin_type": "importer",
+    "name": "SWAGGER 1.0 to Postman",
+    "source_format": "SWAGGER 1.0",
+    "source_format_name": "SWAGGER 1.0"
+  },
   "bin": {
     "swagger2postman": "./bin/swagger2postman"
   },
@@ -10,9 +16,10 @@
     "uuid": ">=3.2.1",
     "postman_validator": ">=0.0.4",
     "lodash": ">=4.17.5",
+    "js-yaml": "3.13.1",
     "commander": ">=2.15.1"
   },
-  "author": "Surya Pappoppula",
+  "author": "Postman Labs <help@getpostman.com>",
   "license": "Apache",
   "devDependencies": {},
   "scripts": {
