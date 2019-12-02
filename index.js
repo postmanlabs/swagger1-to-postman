@@ -36,17 +36,25 @@ module.exports = {
     let data
     if (input.type === 'file') {
       data = fs.readFileSync(input.data).toString()
-      data = yaml.safeLoad(data)
-      if (typeof data !== 'object') {
+      try {
+        data = yaml.safeLoad(data)
+        if (typeof data !== 'object') {
+          failure('Data is not valid JSON/YAML.')
+        }
+        converter.convertJSON(data, converterOptions, success, failure)
+      } catch (error) {
         failure('Data is not valid JSON/YAML.')
       }
-      converter.convertJSON(data, converterOptions, success, failure)
     } else if (input.type === 'string') {
-      data = yaml.safeLoad(input.data)
-      if (typeof data !== 'object') {
+      try {
+        data = yaml.safeLoad(data)
+        if (typeof data !== 'object') {
+          failure('Data is not valid JSON/YAML.')
+        }
+        converter.convertJSON(data, converterOptions, success, failure)
+      } catch (error) {
         failure('Data is not valid JSON/YAML.')
       }
-      converter.convertJSON(data, converterOptions, success, failure)
     } else {
       // eslint-disable-next-line standard/no-callback-literal
       return callback({
@@ -59,35 +67,49 @@ module.exports = {
     let data
     if (input.type === 'file') {
       data = fs.readFileSync(input.data).toString()
-      data = yaml.safeLoad(data)
-      if (typeof data !== 'object') {
+      try {
+        data = yaml.safeLoad(data)
+        if (typeof data !== 'object') {
+          return {
+            result: false,
+            reason: 'Data is not valid JSON/YAML.'
+          }
+        }
+        if (!data.hasOwnProperty('swaggerVersion')) {
+          return {
+            result: false,
+            reason: 'Specification must have a swaggerVersion property'
+          }
+        }
+        return { result: true }
+      } catch (error) {
         return {
           result: false,
           reason: 'Data is not valid JSON/YAML.'
         }
       }
-      if (!data.hasOwnProperty('swaggerVersion')) {
-        return {
-          result: false,
-          reason: 'Specification must have a swaggerVersion property'
-        }
-      }
-      return { result: true }
     } else if (input.type === 'string') {
-      data = yaml.safeLoad(input.data)
-      if (typeof data !== 'object') {
+      try {
+        data = yaml.safeLoad(input.data)
+        if (typeof data !== 'object') {
+          return {
+            result: false,
+            reason: 'Data is not valid JSON/YAML.'
+          }
+        }
+        if (!data.hasOwnProperty('swaggerVersion')) {
+          return {
+            result: false,
+            reason: 'Specification must have a swaggerVersion property'
+          }
+        }
+        return { result: true }
+      } catch (error) {
         return {
           result: false,
           reason: 'Data is not valid JSON/YAML.'
         }
       }
-      if (!data.hasOwnProperty('swaggerVersion')) {
-        return {
-          result: false,
-          reason: 'Specification must have a swaggerVersion property'
-        }
-      }
-      return { result: true }
     } else {
       return {
         result: false,
