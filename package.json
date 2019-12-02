@@ -1,6 +1,6 @@
 {
   "name": "@postman/swagger1-to-postman",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "Convert a given Swagger spec to Postman spec",
   "main": "index.js",
   "com_postman_plugin": {
