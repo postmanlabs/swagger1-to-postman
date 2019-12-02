@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 var converter = require('./lib/convert')
 var fs = require('fs')
 var yaml = require('js-yaml')
@@ -59,12 +60,34 @@ module.exports = {
     if (input.type === 'file') {
       data = fs.readFileSync(input.data).toString()
       data = yaml.safeLoad(data)
-      // eslint-disable-next-line no-prototype-builtins
-      return { result: typeof data === 'object' && data.hasOwnProperty('swaggerVersion') }
+      if (typeof data !== 'object') {
+        return {
+          result: false,
+          reason: 'Data is not valid JSON/YAML.'
+        }
+      }
+      if (!data.hasOwnProperty('swaggerVersion')) {
+        return {
+          result: false,
+          reason: 'Specification must have a swaggerVersion property'
+        }
+      }
+      return { result: true }
     } else if (input.type === 'string') {
       data = yaml.safeLoad(input.data)
-      // eslint-disable-next-line no-prototype-builtins
-      return { result: typeof data === 'object' && data.hasOwnProperty('swaggerVersion') }
+      if (typeof data !== 'object') {
+        return {
+          result: false,
+          reason: 'Data is not valid JSON/YAML.'
+        }
+      }
+      if (!data.hasOwnProperty('swaggerVersion')) {
+        return {
+          result: false,
+          reason: 'Specification must have a swaggerVersion property'
+        }
+      }
+      return { result: true }
     } else {
       return {
         result: false,
