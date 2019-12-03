@@ -1,3 +1,6 @@
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/postmanlabs/swagger1-to-postman.svg)](https://greenkeeper.io/)
+
 A Swagger to POSTMan converter.
 
 Usage examples:
