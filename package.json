@@ -1,6 +1,6 @@
 {
   "name": "@postman/swagger1-to-postman",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Convert a given Swagger spec to Postman spec",
   "main": "index.js",
   "com_postman_plugin": {
@@ -15,7 +15,7 @@
   "dependencies": {
     "uuid": ">=3.2.1",
     "postman_validator": ">=0.0.4",
-    "lodash": ">=4.17.5",
+    "lodash": "4.17.13",
     "js-yaml": "3.13.1",
     "commander": ">=2.15.1"
   },
