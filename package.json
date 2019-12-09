@@ -1,12 +1,12 @@
 {
   "name": "swagger1-to-postman",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Convert a given Swagger spec to Postman spec",
   "main": "index.js",
   "com_postman_plugin": {
     "plugin_type": "importer",
     "name": "SWAGGER 1.0 to Postman",
-    "source_format": "SWAGGER 1.0",
+    "source_format": "SWAGGER1.0",
     "source_format_name": "SWAGGER 1.0"
   },
   "bin": {

@@ -47,6 +47,7 @@ module.exports = {
       }
     } else if (input.type === 'string') {
       try {
+        data = input.data
         data = yaml.safeLoad(data)
         if (typeof data !== 'object') {
           failure('Data is not valid JSON/YAML.')
