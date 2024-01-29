@@ -13,23 +13,30 @@
     "swagger2postman": "./bin/swagger2postman"
   },
   "dependencies": {
-    "uuid": ">=3.2.1",
+    "uuid": "3.3.2",
     "postman_validator": ">=0.0.4",
-    "lodash": "4.17.13",
-    "js-yaml": "3.13.1",
-    "commander": ">=2.15.1"
+    "lodash": "4.17.21",
+    "js-yaml": "3.14.1",
+    "commander": "2.20.3"
+  },
+  "engines": {
+    "node": ">=16"
   },
   "author": "Postman Labs <help@getpostman.com>",
   "license": "Apache",
   "devDependencies": {
     "eslint": "^6.7.2",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-jsdoc": "3.8.0",
+    "eslint-plugin-mocha": "5.2.0",
+    "eslint-plugin-security": "1.4.0",
+    "expect.js": "0.3.1",
+    "mocha": "10.2.0",
+    "nyc": "14.1.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./scripts/test.sh",
+    "test-unit": "./scripts/test-unit.sh",
+    "test-lint": "./scripts/test-lint.sh",
+    "coverage": "nyc report --reporter=html --reporter=text mocha"
   }
 }

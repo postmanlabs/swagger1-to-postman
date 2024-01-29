@@ -3,3 +3,6 @@ collection_schema.json
 main.json
 store
 swagger_spec
+.vscode
+.nyc_output
+.coverage
