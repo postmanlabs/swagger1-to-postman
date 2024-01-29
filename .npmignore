@@ -1,2 +1,8 @@
 sample_files
 node_modules
+test
+scripts
+coverage
+.idea
+.vscode
+.nyc_output
