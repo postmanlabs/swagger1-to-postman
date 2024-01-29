@@ -2,6 +2,8 @@
 var converter = require('./lib/convert')
 var fs = require('fs')
 var yaml = require('js-yaml')
+var UserError = require('./lib/UserError');
+
 module.exports = {
   getOptions: function () {
     return []
@@ -39,28 +41,28 @@ module.exports = {
       try {
         data = yaml.safeLoad(data)
         if (typeof data !== 'object') {
-          failure('Data is not valid JSON/YAML.')
+          failure(new UserError('Data is not valid JSON/YAML.'))
         }
         converter.convertJSON(data, converterOptions, success, failure)
       } catch (error) {
-        failure('Data is not valid JSON/YAML.')
+        failure(new UserError('Provided Swagger definition is invalid', error))
       }
     } else if (input.type === 'string') {
       try {
         data = input.data
         data = yaml.safeLoad(data)
         if (typeof data !== 'object') {
-          failure('Data is not valid JSON/YAML.')
+          failure(new UserError('Data is not valid JSON/YAML.'))
         }
         converter.convertJSON(data, converterOptions, success, failure)
       } catch (error) {
-        failure('Data is not valid JSON/YAML.')
+        failure(new UserError('Provided Swagger definition is invalid', error))
       }
     } else {
       // eslint-disable-next-line standard/no-callback-literal
       return callback({
         result: false,
-        reason: 'input type: ' + input.type + ' is not valid'
+        reason: (new UserError('input type: ' + input.type + ' is not valid'))
       })
     }
   },
