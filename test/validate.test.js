@@ -1,6 +1,5 @@
 var validate = require('../index').validate,
-  expect = require('expect.js'),
-  _ = require('lodash');
+  expect = require('expect.js');
 
 describe('validate', function () {
   it('return false result for incorrect input type', function (done) {

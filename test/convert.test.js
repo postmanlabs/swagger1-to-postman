@@ -1,7 +1,6 @@
 var convert = require('../index').convert,
   expect = require('expect.js'),
-  fs = require('fs'),
-  _ = require('lodash');
+  fs = require('fs');
 
 describe('convert', function () {
 
